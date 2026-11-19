@@ -4,7 +4,7 @@ Copyright © 2026 Christopher Snow.
 
 [Open the course](https://snowch.github.io/c-linux-systems-lab/). Know basic C. Start with one call to open a file, then learn return values, errno, file I/O and metadata. Later lessons apply those contracts to processes, concurrency, event loops and supervision.
 
-Each lesson introduces the relevant calls in short excerpts, then runs the example and asks you to make one change. Open the full C source when you are ready to edit. **Run in Linux** compiles the source with GCC and executes it in a self-hosted Alpine Linux guest using WebAssembly. The browser saves source changes per lesson. Reset Linux starts a fresh guest and keeps the editor changes.
+Each lesson introduces the relevant calls in short excerpts, then runs the example and asks you to make one change. The editor opens a separate runnable C program for each lesson. Try reading a pipe and joining one thread before combining the pieces. Earlier saved drafts of shared files are available in the source picker. **Run in Linux** compiles the source with GCC and executes it in a self-hosted Alpine Linux guest using WebAssembly. The browser saves source changes per lesson. Reset Linux starts a fresh guest and keeps the editor changes.
 
 Choose **Download for offline use** before disconnecting. Save roughly 145 MB of free browser storage for this course. Open the same URL in the same browser profile after the page reports **Available offline**. The lesson files, editor, compiler, kernel and runtime are included. External documentation requires an internet connection. HTTPS or localhost and a browser with WebAssembly and service workers are required.
 
@@ -21,6 +21,7 @@ Choose **Download for offline use** before disconnecting. Save roughly 145 MB of
 
 ### Processes and terminal control
 
+- [Read from a pipe and observe EOF](https://snowch.github.io/c-linux-systems-lab/#pipe-read)
 - [Connect two processes with a pipe](https://snowch.github.io/c-linux-systems-lab/#pipeline)
 - [Synchronise a parent with a signal](https://snowch.github.io/c-linux-systems-lab/#signals)
 - [Stop and resume a foreground job](https://snowch.github.io/c-linux-systems-lab/#jobs)
@@ -29,6 +30,7 @@ Choose **Download for offline use** before disconnecting. Save roughly 145 MB of
 
 - [Compare shared and private memory](https://snowch.github.io/c-linux-systems-lab/#mapping)
 - [Map bytes backed by an open file](https://snowch.github.io/c-linux-systems-lab/#filemap)
+- [Start and join one thread](https://snowch.github.io/c-linux-systems-lab/#thread-start)
 - [Coordinate a producer and a consumer](https://snowch.github.io/c-linux-systems-lab/#threads)
 - [Share a counter and publish a result](https://snowch.github.io/c-linux-systems-lab/#atomics)
 

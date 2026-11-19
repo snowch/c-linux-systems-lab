@@ -2,6 +2,44 @@ const step = (heading, text, anchor, lines) => ({ heading, text, anchor, lines }
 const guide = (goal, look, edit, ...steps) => ({ goal, look, edit, steps });
 
 export const walkthroughs = {
+  "thread-start": {
+    "goal": "Pass a message to one thread and wait for the thread to finish. The next lesson adds a shared queue and safe coordination.",
+    "look": "Find the worker’s message, then worker joined.",
+    "edit": "const char message[]",
+    "steps": [
+      {
+        "heading": "Accept one argument",
+        "text": "The thread entry receives the pointer passed to pthread_create().",
+        "anchor": "const char *message = argument;",
+        "lines": 2
+      },
+      {
+        "heading": "Start the worker and wait",
+        "text": "pthread_join() waits for the worker before main prints its last line.",
+        "anchor": "thread_ok(pthread_create(",
+        "lines": 3
+      }
+    ]
+  },
+  "pipe-read": {
+    "goal": "Use a pipe within one process. Write two bytes, close the writer, then read the bytes followed by EOF.",
+    "look": "Look for the first byte count and then the zero-byte EOF. The next lesson connects separate processes to the same kind of pipe.",
+    "edit": "const char text[]",
+    "steps": [
+      {
+        "heading": "Create a read end and a write end",
+        "text": "The two descriptors refer to opposite ends of the same pipe.",
+        "anchor": "int ends[2];",
+        "lines": 2
+      },
+      {
+        "heading": "Write, close and read",
+        "text": "Closing the final writer leaves any queued bytes available to the reader. After those bytes are consumed, the next read reports EOF.",
+        "anchor": "require(write(ends[1]",
+        "lines": 5
+      }
+    ]
+  },
   'open-file': guide(
     'Open /dev/null, a device that discards writes and has no bytes to read. Use the handle Linux gives you, then release it.',
     'Find the path and the nonnegative descriptor. Linux chooses the descriptor number.',

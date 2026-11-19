@@ -31,6 +31,8 @@ const pthreadJoin = man('pthread_join.3', 'pthread_join() waits for a joinable t
 const strace = man('strace.1', 'Use -e trace=write to show write system calls with arguments, return values and error names.');
 
 export const references = {
+  "thread-start": [pthreadCreate, pthreadJoin],
+  "pipe-read": [pipe, read, close],
   'open-file': [open, close],
   'api-errors': [open, read, errno, man('strerror.3', 'strerror() converts a saved errno value into a human-readable error description.')],
   'api-bytes': [write, seek, read],

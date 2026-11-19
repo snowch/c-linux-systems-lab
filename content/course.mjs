@@ -8,6 +8,8 @@ export const course = {
   "summary": "Start with the Linux C API, then investigate processes, files, memory, concurrency and event-driven supervision.",
   "instructions": "Run in Linux sends the editor contents to the guest. GCC compiles new or edited source before running the exercise. Use the console output to check your prediction.",
   "files": {
+    "thread-start.c": "./examples/thread-start.c",
+    "pipe-read.c": "./examples/pipe-read.c",
     "systems.c": "./examples/systems.c",
     "io-basics.c": "./examples/io-basics.c",
     "linux-tools.c": "./examples/linux-tools.c",
@@ -105,7 +107,27 @@ export const course = {
       "command": "/tmp/linux-tools cloexec"
     },
     {
+      "id": "pipe-read",
+      "section": "Processes and terminal control",
+      "title": "Read from a pipe and observe EOF",
+      "intro": "Use a pipe within one process. Write two bytes, close the writer, then read the bytes followed by EOF.",
+      "question": "What does the second read return after the pipe is empty and its write end has closed?",
+      "task": "Change text from go to ready. Run and compare both read results.",
+      "hint": "pipe() returns two descriptors. ends[0] reads and ends[1] writes.",
+      "explanation": "The first read gets the queued bytes. The second returns zero because every write descriptor has closed.",
+      "transfer": "What would happen to the second read if the write end stayed open?",
+      "file": "pipe-read.c",
+      "focus": "int ends[2];",
+      "assets": [
+        "systems-support.h"
+      ],
+      "support": "systems-support.h",
+      "prepare": "if [ ! -x /tmp/lab-pipe-read ] || ! cmp -s /tmp/lesson-input/pipe-read.c /tmp/lab-pipe-read.source; then\n    echo 'Compiling pipe-read.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror /tmp/lesson-input/pipe-read.c -o /tmp/lab-pipe-read.next -pthread\n    mv /tmp/lab-pipe-read.next /tmp/lab-pipe-read\n    cp /tmp/lesson-input/pipe-read.c /tmp/lab-pipe-read.source\nfi",
+      "command": "/tmp/lab-pipe-read"
+    },
+    {
       "id": "pipeline",
+      "buildsOn": "pipe-read",
       "section": "Processes and terminal control",
       "title": "Connect two processes with a pipe",
       "intro": "fork() creates a child that inherits open descriptors. dup2() redirects standard input or output before exec replaces the child’s program.",
@@ -177,7 +199,27 @@ export const course = {
       "command": "/tmp/linux-tools filemap"
     },
     {
+      "id": "thread-start",
+      "section": "Memory and concurrency",
+      "title": "Start and join one thread",
+      "intro": "Pass a message to one thread and wait for the thread to finish. The next lesson adds a shared queue and safe coordination.",
+      "question": "Which call ensures the worker has finished before main prints its last line?",
+      "task": "Change message from ready to hello. Run and find the new worker message.",
+      "hint": "pthread_create() starts the worker. pthread_join() waits for it.",
+      "explanation": "The worker receives a pointer to the message as its argument. The local array remains live until the worker joins.",
+      "transfer": "What would go wrong if a thread received a pointer to a local array that no longer existed when it used it?",
+      "file": "thread-start.c",
+      "focus": "static void *print_message",
+      "assets": [
+        "systems-support.h"
+      ],
+      "support": "systems-support.h",
+      "prepare": "if [ ! -x /tmp/lab-thread-start ] || ! cmp -s /tmp/lesson-input/thread-start.c /tmp/lab-thread-start.source; then\n    echo 'Compiling thread-start.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror /tmp/lesson-input/thread-start.c -o /tmp/lab-thread-start.next -pthread\n    mv /tmp/lab-thread-start.next /tmp/lab-thread-start\n    cp /tmp/lesson-input/thread-start.c /tmp/lab-thread-start.source\nfi",
+      "command": "/tmp/lab-thread-start"
+    },
+    {
       "id": "threads",
+      "buildsOn": "thread-start",
       "section": "Memory and concurrency",
       "title": "Coordinate a producer and a consumer",
       "intro": "Threads share memory. A mutex protects the queue state, and a condition variable allows a thread to sleep until the predicate it cares about might have changed.",
@@ -342,3 +384,41 @@ export const course = {
     }
   ]
 };
+
+// Retain the original run configuration for drafts saved against shared files.
+const supportFiles = {
+  'systems.c': 'systems-support.h',
+  'linux-tools.c': 'process-support.h',
+  'io-basics.c': null
+};
+for (const lesson of course.lessons) {
+  if (!Object.hasOwn(supportFiles, lesson.file)) continue;
+  const original = lesson.file;
+  const support = supportFiles[original];
+  lesson.previous = {
+    file: original,
+    prepare: lesson.prepare ?? course.prepare,
+    command: lesson.command,
+    assets: lesson.assets
+  };
+  lesson.file = lesson.id + '.c';
+  course.files[lesson.file] = './examples/' + lesson.file;
+  if (support) {
+    lesson.support = support;
+    lesson.assets = [support, ...(lesson.assets ?? [])];
+  }
+  const source = '/tmp/lesson-input/' + lesson.file;
+  const executable = '/tmp/lab-' + lesson.id;
+  const libraries = ' -pthread';
+  lesson.prepare = [
+    `if [ ! -x ${executable} ] || ! cmp -s ${source} ${executable}.source; then`,
+    `    echo 'Compiling ${lesson.file} in Linux'`,
+    `    gcc -std=c11 -Wall -Wextra -Werror ${source} -o ${executable}.next${libraries}`,
+    `    mv ${executable}.next ${executable}`,
+    `    cp ${source} ${executable}.source`,
+    'fi'
+  ].join('\n');
+  lesson.command = lesson.command.replace(/\/tmp\/[a-z-]+ [a-z0-9-]+$/, executable);
+  if (lesson.command === lesson.previous.command)
+    throw Error('Missing lesson entry point for ' + lesson.id);
+}
