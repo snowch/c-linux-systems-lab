@@ -2,11 +2,11 @@ export const course = {
   "slug": "c-linux-systems-lab",
   "title": "C Linux Systems Lab",
   "summary": "Linux file descriptors, processes, signals, memory, threads and supervision.",
-  "instructions": "Run in Linux compiles the editor contents with GCC and runs this exercise in the guest. Use the console output to check your prediction.",
+  "instructions": "Run in Linux sends the editor contents to the guest. GCC compiles new or edited source before running the exercise. Use the console output to check your prediction.",
   "files": {
     "systems.c": "./examples/systems.c"
   },
-  "prepare": "set -e\ngcc -std=c11 -Wall -Wextra -Werror -O2 -pthread /tmp/lesson-input/systems.c -o /tmp/sys",
+  "prepare": "if [ ! -x /tmp/sys ] || [ /tmp/lesson-input/systems.c -nt /tmp/sys ]; then\n    echo 'Compiling systems.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/systems.c -o /tmp/sys.next\n    mv /tmp/sys.next /tmp/sys\nfi",
   "lessons": [
     {
       "id": "descriptors",
