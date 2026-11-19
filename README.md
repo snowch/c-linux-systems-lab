@@ -12,7 +12,7 @@ Capstone sections link back to the smaller exercises and open the complete runna
 
 ## Lessons
 
-Each teaching section ends with a capstone that combines its skills. Each lesson opens with a concept diagram.
+Each teaching section ends with a capstone that combines its skills. Diagrams show which descriptors share a file offset, which resources a system call changes, and how peers exchange data.
 
 ### Linux API essentials
 
