@@ -37,6 +37,8 @@ p{margin:.65rem 0 1rem}
 .workspace{background:var(--paper);border:1px solid var(--line);border-radius:.55rem;overflow:hidden}
 .toolbar,#shell{padding:.55rem .7rem}
 .toolbar label,#shell label{font-weight:600}
+#file-choice{display:flex;align-items:center;flex-wrap:wrap;gap:.35rem .55rem;min-width:0}
+#file{max-width:100%;text-overflow:ellipsis}
 textarea,pre,#command{font:16px/1.5 PlexMono,monospace}
 textarea,pre{background:var(--code);color:var(--code-ink);margin:0;padding:16px;display:block;width:100%;border:0;tab-size:4}
 textarea{resize:vertical;min-height:9rem;white-space:pre}
@@ -68,13 +70,13 @@ footer{border-top:1px solid var(--line);padding:1rem clamp(16px,4vw,44px);color:
 @media(max-width:52rem){.course-hero,.course-setup{grid-template-columns:minmax(0,1fr)}.course-cover{max-width:42rem}.course-setup{gap:0}}
 
 #lesson-title{max-width:19ch}
-#workbench .question,.read-result,.lesson-task{
+#workbench .question,.lesson-task{
   border-left:3px solid var(--accent);
   border-radius:0 8px 8px 0;
   background:var(--soft);
   padding:16px 20px;
 }
-#workbench>.question,.read-result,.lesson-task{max-width:none;margin:24px 0}
+#workbench>.question,.lesson-task{max-width:none;margin:24px 0}
 .walkthrough{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;padding:0;list-style-position:inside;margin:16px 0 24px}
 .walkthrough li{min-width:0}
 .walkthrough li::marker{font-weight:600;color:var(--accent)}
@@ -99,7 +101,17 @@ footer{border-top:1px solid var(--line);padding:1rem clamp(16px,4vw,44px);color:
 .program-tools>summary{padding:12px 16px;font-weight:600}
 .program-tools:last-child{border:0}
 #program #source:focus-visible{outline-offset:-3px}
-#draft-notice{font-size:.95rem;color:var(--muted)}
+#draft-status{margin:0;border-bottom:1px solid var(--line)}
+#terminal[data-empty]{min-height:0}
+.output-heading{padding:.55rem .7rem;border-top:1px solid var(--line)}
+.output-heading h3,.output-heading p{margin:.2rem 0}
+.output-heading p{max-width:75ch}
+.notice{font-size:.95rem;color:var(--muted)}
+#earlier-run{border-top:1px solid var(--line)}
+#earlier-output{min-height:0}
+.tool-panel{margin:1.25rem 0;border:1px solid var(--line);border-radius:.55rem;background:var(--paper);overflow:hidden}
+.tool-panel>summary,.tool-panel>p{margin:0;padding:.65rem .75rem}
+button[aria-disabled=true]{opacity:.6;cursor:default}
 .lesson-task h2{margin:0 0 12px}
 #workbench .lesson-task .question{border:0;padding:0;margin:12px 0}
 @media(max-width:760px){.walkthrough pre{padding-inline:16px}}
