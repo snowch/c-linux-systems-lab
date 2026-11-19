@@ -2,7 +2,7 @@ export const course = {
   "slug": "c-linux-systems-lab",
   "title": "C Linux Systems Lab",
   "overview": {
-    "description": "Learn how C programs use Linux. Start with return values, errno and file descriptors, then work through process control, memory, threads, event loops and worker supervision.",
+    "description": "Learn how C programs use Linux. Open a file in a small standalone program, then work through errors, file I/O, processes, memory, threads, event loops and worker supervision.",
     "prerequisites": "Know basic C. You can run every exercise and inspect its output in the browser."
   },
   "summary": "Start with the Linux C API, then investigate processes, files, memory, concurrency and event-driven supervision.",
@@ -10,10 +10,30 @@ export const course = {
   "files": {
     "systems.c": "./examples/systems.c",
     "io-basics.c": "./examples/io-basics.c",
-    "linux-tools.c": "./examples/linux-tools.c"
+    "linux-tools.c": "./examples/linux-tools.c",
+    "open-file.c": "./examples/open-file.c"
   },
-  "prepare": "if [ ! -x /tmp/sys ] || [ /tmp/lesson-input/systems.c -nt /tmp/sys ]; then\n    echo 'Compiling systems.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/systems.c -o /tmp/sys.next\n    mv /tmp/sys.next /tmp/sys\nfi",
+  "prepare": "if [ ! -x /tmp/sys ] || ! cmp -s /tmp/lesson-input/systems.c /tmp/sys.source; then\n    echo 'Compiling systems.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/systems.c -o /tmp/sys.next\n    mv /tmp/sys.next /tmp/sys\n    cp /tmp/lesson-input/systems.c /tmp/sys.source\nfi",
   "lessons": [
+    {
+      "id": "open-file",
+      "section": "Linux API essentials",
+      "title": "Open a file and get a descriptor",
+      "intro": "Start with one system call and one value to read from its output.",
+      "question": "What does Linux give the program when open() succeeds?",
+      "task": "Change the path from /dev/null to /dev/zero. Run again. Compare the path and descriptor reported by the program.",
+      "hint": "Both names identify readable devices in this Linux guest.",
+      "explanation": "Both calls give the program a descriptor. The path selects what to open. The descriptor is the handle the program uses afterward.",
+      "transfer": "Why does the program have to check the result before passing it to close()?",
+      "reference": [
+        "Read open(2)",
+        "https://man7.org/linux/man-pages/man2/open.2.html"
+      ],
+      "file": "open-file.c",
+      "focus": "int fd = open(path, O_RDONLY);",
+      "command": "/tmp/open-file",
+      "prepare": "if [ ! -x /tmp/open-file ] || ! cmp -s /tmp/lesson-input/open-file.c /tmp/open-file.source; then\n    gcc -std=c11 -Wall -Wextra -Werror /tmp/lesson-input/open-file.c -o /tmp/open-file.next\n    mv /tmp/open-file.next /tmp/open-file\n    cp /tmp/lesson-input/open-file.c /tmp/open-file.source\nfi"
+    },
     {
       "id": "api-errors",
       "section": "Linux API essentials",
@@ -30,7 +50,7 @@ export const course = {
         "Read errno(3)",
         "https://man7.org/linux/man-pages/man3/errno.3.html"
       ],
-      "prepare": "if [ ! -x /tmp/linux-api ] || [ /tmp/lesson-input/io-basics.c -nt /tmp/linux-api ]; then\n    echo 'Compiling io-basics.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror  /tmp/lesson-input/io-basics.c -o /tmp/linux-api.next \n    mv /tmp/linux-api.next /tmp/linux-api\nfi",
+      "prepare": "if [ ! -x /tmp/linux-api ] || ! cmp -s /tmp/lesson-input/io-basics.c /tmp/linux-api.source; then\n    echo 'Compiling io-basics.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror  /tmp/lesson-input/io-basics.c -o /tmp/linux-api.next \n    mv /tmp/linux-api.next /tmp/linux-api\n    cp /tmp/lesson-input/io-basics.c /tmp/linux-api.source\nfi",
       "command": "/tmp/linux-api errors"
     },
     {
@@ -49,7 +69,7 @@ export const course = {
         "Read read(2)",
         "https://man7.org/linux/man-pages/man2/read.2.html"
       ],
-      "prepare": "if [ ! -x /tmp/linux-api ] || [ /tmp/lesson-input/io-basics.c -nt /tmp/linux-api ]; then\n    echo 'Compiling io-basics.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror  /tmp/lesson-input/io-basics.c -o /tmp/linux-api.next \n    mv /tmp/linux-api.next /tmp/linux-api\nfi",
+      "prepare": "if [ ! -x /tmp/linux-api ] || ! cmp -s /tmp/lesson-input/io-basics.c /tmp/linux-api.source; then\n    echo 'Compiling io-basics.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror  /tmp/lesson-input/io-basics.c -o /tmp/linux-api.next \n    mv /tmp/linux-api.next /tmp/linux-api\n    cp /tmp/lesson-input/io-basics.c /tmp/linux-api.source\nfi",
       "command": "/tmp/linux-api bytes"
     },
     {
@@ -68,7 +88,7 @@ export const course = {
         "Read stat(2)",
         "https://man7.org/linux/man-pages/man2/stat.2.html"
       ],
-      "prepare": "if [ ! -x /tmp/linux-api ] || [ /tmp/lesson-input/io-basics.c -nt /tmp/linux-api ]; then\n    echo 'Compiling io-basics.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror  /tmp/lesson-input/io-basics.c -o /tmp/linux-api.next \n    mv /tmp/linux-api.next /tmp/linux-api\nfi",
+      "prepare": "if [ ! -x /tmp/linux-api ] || ! cmp -s /tmp/lesson-input/io-basics.c /tmp/linux-api.source; then\n    echo 'Compiling io-basics.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror  /tmp/lesson-input/io-basics.c -o /tmp/linux-api.next \n    mv /tmp/linux-api.next /tmp/linux-api\n    cp /tmp/lesson-input/io-basics.c /tmp/linux-api.source\nfi",
       "command": "/tmp/linux-api metadata"
     },
     {
@@ -105,7 +125,7 @@ export const course = {
         "Read execve(2)",
         "https://man7.org/linux/man-pages/man2/execve.2.html"
       ],
-      "prepare": "if [ ! -x /tmp/linux-tools ] || [ /tmp/lesson-input/linux-tools.c -nt /tmp/linux-tools ]; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\nfi",
+      "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools cloexec"
     },
     {
@@ -160,7 +180,7 @@ export const course = {
         "Read tcsetpgrp(3)",
         "https://man7.org/linux/man-pages/man3/tcsetpgrp.3.html"
       ],
-      "prepare": "if [ ! -x /tmp/linux-tools ] || [ /tmp/lesson-input/linux-tools.c -nt /tmp/linux-tools ]; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\nfi",
+      "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "mkdir -p /dev/pts\nif ! mountpoint -q /dev/pts; then mount -t devpts devpts /dev/pts; fi\n/tmp/linux-tools jobs"
     },
     {
@@ -197,7 +217,7 @@ export const course = {
         "Read mmap(2)",
         "https://man7.org/linux/man-pages/man2/mmap.2.html"
       ],
-      "prepare": "if [ ! -x /tmp/linux-tools ] || [ /tmp/lesson-input/linux-tools.c -nt /tmp/linux-tools ]; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\nfi",
+      "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools filemap"
     },
     {
@@ -234,7 +254,7 @@ export const course = {
         "Read the C memory-order reference",
         "https://en.cppreference.com/w/c/atomic/memory_order"
       ],
-      "prepare": "if [ ! -x /tmp/linux-tools ] || [ /tmp/lesson-input/linux-tools.c -nt /tmp/linux-tools ]; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\nfi",
+      "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools atomics"
     },
     {
@@ -253,7 +273,7 @@ export const course = {
         "Read mq_overview(7)",
         "https://man7.org/linux/man-pages/man7/mq_overview.7.html"
       ],
-      "prepare": "if [ ! -x /tmp/linux-tools ] || [ /tmp/lesson-input/linux-tools.c -nt /tmp/linux-tools ]; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\nfi",
+      "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools mqueue"
     },
     {
@@ -290,7 +310,7 @@ export const course = {
         "Read inotify(7)",
         "https://man7.org/linux/man-pages/man7/inotify.7.html"
       ],
-      "prepare": "if [ ! -x /tmp/linux-tools ] || [ /tmp/lesson-input/linux-tools.c -nt /tmp/linux-tools ]; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\nfi",
+      "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools inotify"
     },
     {
@@ -327,7 +347,7 @@ export const course = {
         "Read timerfd_create(2)",
         "https://man7.org/linux/man-pages/man2/timerfd_create.2.html"
       ],
-      "prepare": "if [ ! -x /tmp/linux-tools ] || [ /tmp/lesson-input/linux-tools.c -nt /tmp/linux-tools ]; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\nfi",
+      "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools fd-events"
     },
     {
@@ -346,7 +366,7 @@ export const course = {
         "Read getrlimit(2)",
         "https://man7.org/linux/man-pages/man2/getrlimit.2.html"
       ],
-      "prepare": "if [ ! -x /tmp/linux-tools ] || [ /tmp/lesson-input/linux-tools.c -nt /tmp/linux-tools ]; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\nfi",
+      "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools limits"
     },
     {
@@ -368,7 +388,7 @@ export const course = {
       "assets": [
         "strace-x86"
       ],
-      "prepare": "if [ ! -x /tmp/linux-tools ] || [ /tmp/lesson-input/linux-tools.c -nt /tmp/linux-tools ]; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\nfi",
+      "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "cp /tmp/lesson-input/strace-x86 /tmp/lab-strace\nchmod 700 /tmp/lab-strace\n/tmp/lab-strace -e trace=write /tmp/linux-tools trace"
     },
     {
@@ -405,7 +425,7 @@ export const course = {
         "Read pidfd_open(2)",
         "https://man7.org/linux/man-pages/man2/pidfd_open.2.html"
       ],
-      "prepare": "if [ ! -x /tmp/linux-tools ] || [ /tmp/lesson-input/linux-tools.c -nt /tmp/linux-tools ]; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\nfi",
+      "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools pidfd"
     }
   ]

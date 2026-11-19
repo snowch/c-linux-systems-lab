@@ -2,9 +2,9 @@
 
 Copyright © 2026 Christopher Snow.
 
-[Open the course](https://snowch.github.io/c-linux-systems-lab/). Know basic C. The first lessons teach Linux API return values, errno, file I/O and metadata. Later lessons apply those contracts to processes, concurrency, event loops and supervision.
+[Open the course](https://snowch.github.io/c-linux-systems-lab/). Know basic C. Start with one call to open a file, then learn return values, errno, file I/O and metadata. Later lessons apply those contracts to processes, concurrency, event loops and supervision.
 
-Each lesson includes editable C source, a runnable experiment, a code change, a hint and a transfer question. **Run in Linux** compiles the source with GCC and executes it in a self-hosted Alpine Linux guest using WebAssembly. The browser saves source changes per lesson. Reset Linux starts a fresh guest and keeps the editor changes.
+Each lesson introduces the relevant calls in short excerpts, then runs the example and asks you to make one change. Open the full C source when you are ready to edit. **Run in Linux** compiles the source with GCC and executes it in a self-hosted Alpine Linux guest using WebAssembly. The browser saves source changes per lesson. Reset Linux starts a fresh guest and keeps the editor changes.
 
 Choose **Download for offline use** before disconnecting. Save roughly 145 MB of free browser storage for this course. Open the same URL in the same browser profile after the page reports **Available offline**. The lesson files, editor, compiler, kernel and runtime are included. External documentation requires an internet connection. HTTPS or localhost and a browser with WebAssembly and service workers are required.
 
@@ -12,6 +12,7 @@ Choose **Download for offline use** before disconnecting. Save roughly 145 MB of
 
 ### Linux API essentials
 
+- [Open and close a file](https://snowch.github.io/c-linux-systems-lab/#open-file)
 - [Check a Linux API call and read errno](https://snowch.github.io/c-linux-systems-lab/#api-errors)
 - [Write, rewind and read a file](https://snowch.github.io/c-linux-systems-lab/#api-bytes)
 - [Inspect a file through its descriptor](https://snowch.github.io/c-linux-systems-lab/#api-metadata)
