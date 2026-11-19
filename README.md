@@ -2,7 +2,7 @@
 
 Copyright © 2026 Christopher Snow.
 
-[Open the course](https://snowch.github.io/c-linux-systems-lab/). Linux file descriptors, processes, signals, memory, threads and supervision. Know basic C and how to read a shell command.
+[Open the course](https://snowch.github.io/c-linux-systems-lab/). Know basic C. The first lessons teach Linux API return values, errno, file I/O and metadata. Later lessons apply those contracts to processes, concurrency, event loops and supervision.
 
 Each lesson includes editable C source, a runnable experiment, a code change, a hint and a transfer question. **Run in Linux** compiles the source with GCC and executes it in a self-hosted Alpine Linux guest using WebAssembly. The browser saves source changes per lesson. Reset Linux starts a fresh guest and keeps the editor changes.
 
@@ -10,14 +10,48 @@ Choose **Download for offline use** before disconnecting. Save roughly 145 MB of
 
 ## Lessons
 
+### Linux API essentials
+
+- [Check a Linux API call and read errno](https://snowch.github.io/c-linux-systems-lab/#api-errors)
+- [Write, rewind and read a file](https://snowch.github.io/c-linux-systems-lab/#api-bytes)
+- [Inspect a file through its descriptor](https://snowch.github.io/c-linux-systems-lab/#api-metadata)
 - [Trace a shared file offset](https://snowch.github.io/c-linux-systems-lab/#descriptors)
+- [Control which descriptors survive exec](https://snowch.github.io/c-linux-systems-lab/#cloexec)
+
+### Processes and terminal control
+
 - [Connect two processes with a pipe](https://snowch.github.io/c-linux-systems-lab/#pipeline)
 - [Synchronise a parent with a signal](https://snowch.github.io/c-linux-systems-lab/#signals)
+- [Stop and resume a foreground job](https://snowch.github.io/c-linux-systems-lab/#jobs)
+
+### Memory and concurrency
+
 - [Compare shared and private memory](https://snowch.github.io/c-linux-systems-lab/#mapping)
+- [Map bytes backed by an open file](https://snowch.github.io/c-linux-systems-lab/#filemap)
 - [Coordinate a producer and a consumer](https://snowch.github.io/c-linux-systems-lab/#threads)
+- [Share a counter and publish a result](https://snowch.github.io/c-linux-systems-lab/#atomics)
+
+### Files and event loops
+
+- [Receive messages in priority order](https://snowch.github.io/c-linux-systems-lab/#mqueue)
 - [Replace a file while readers hold it open](https://snowch.github.io/c-linux-systems-lab/#replace)
+- [Observe a directory while publishing a file](https://snowch.github.io/c-linux-systems-lab/#inotify)
 - [Observe eventfd readiness](https://snowch.github.io/c-linux-systems-lab/#events)
+- [Handle timers and signals in one event loop](https://snowch.github.io/c-linux-systems-lab/#fd-events)
+
+### Diagnostics and resource limits
+
+- [Diagnose descriptor exhaustion](https://snowch.github.io/c-linux-systems-lab/#limits)
+- [Trace an API call at the kernel boundary](https://snowch.github.io/c-linux-systems-lab/#trace)
+
+### Capstones
+
 - [Supervise a worker with a deadline](https://snowch.github.io/c-linux-systems-lab/#supervise)
+- [Escalate a worker shutdown with a process descriptor](https://snowch.github.io/c-linux-systems-lab/#pidfd)
+
+## Scope
+
+The course runs the Linux interfaces through a real kernel in the guest. The guest uses RAM-backed storage. Measurements and filesystem sync exercises describe observable Linux behaviour without testing physical disks or representing native hardware performance.
 
 ## Develop
 
