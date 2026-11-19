@@ -31,6 +31,10 @@ const pthreadJoin = man('pthread_join.3', 'pthread_join() waits for a joinable t
 const strace = man('strace.1', 'Use -e trace=write to show write system calls with arguments, return values and error names.');
 
 export const references = {
+  "file-apis-capstone": [seek, man("dup.2", "Duplicate a descriptor while sharing its open-file offset."), man("stat.2", "fstat() reads metadata through the chosen descriptor.")],
+  "memory-capstone": [mmap, pthreadCreate, pthreadJoin],
+  "events-capstone": [man("rename.2", "Rename within a directory to publish a new name."), man("inotify.7", "Read event masks and names from an inotify descriptor."), man("epoll.7", "epoll reports readiness for registered descriptors.")],
+  "diagnostics-capstone": [man("strace.1", "Use -e trace=open,openat to restrict the trace to file opens."), man("getrlimit.2", "RLIMIT_NOFILE bounds the descriptor numbers a process can allocate."), errno],
   "thread-start": [pthreadCreate, pthreadJoin],
   "pipe-read": [pipe, read, close],
   'open-file': [open, close],

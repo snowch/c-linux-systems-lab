@@ -2,6 +2,82 @@ const step = (heading, text, anchor, lines) => ({ heading, text, anchor, lines }
 const guide = (goal, look, edit, ...steps) => ({ goal, look, edit, steps });
 
 export const walkthroughs = {
+  "file-apis-capstone": {
+    "edit": "const off_t start = 0;",
+    "steps": [
+      {
+        "heading": "Observe file size",
+        "text": "Read metadata through the open descriptor.",
+        "anchor": "struct stat info;",
+        "lines": 3
+      },
+      {
+        "heading": "Seek and duplicate the descriptor",
+        "text": "The duplicate shares the offset you set on the original.",
+        "anchor": "const off_t start =",
+        "lines": 8
+      }
+    ],
+    "goal": "Write a temporary file, inspect its size and read one byte through a duplicate. Check the original descriptor’s offset afterwards.",
+    "look": "Find metadata size 5, byte h and original offset 1. The edited run reads e and reports offset 2."
+  },
+  "memory-capstone": {
+    "edit": "const int mode = MAP_SHARED;",
+    "steps": [
+      {
+        "heading": "Choose the mapping mode",
+        "text": "Pass the file descriptor to mmap() and check the returned address.",
+        "anchor": "const int mode =",
+        "lines": 3
+      },
+      {
+        "heading": "Wait before reading the result",
+        "text": "The worker receives the mapping as its argument. Main compares both views after the join.",
+        "anchor": "pthread_t worker;",
+        "lines": 4
+      }
+    ],
+    "goal": "Give one worker access to a file-backed mapping. Join it before comparing the mapped byte and the backing file.",
+    "look": "Look for “mapping=W backing file=W”, then change the mapping mode and compare."
+  },
+  "events-capstone": {
+    "edit": "const uint32_t watched_events",
+    "steps": [
+      {
+        "heading": "Register the filesystem event source",
+        "text": "inotify selects the event types. epoll watches the inotify descriptor for readable data.",
+        "anchor": "const uint32_t watched_events",
+        "lines": 6
+      },
+      {
+        "heading": "Publish and wait",
+        "text": "Move the file to its final name and wait until the descriptor is readable.",
+        "anchor": "require(renameat(dir,",
+        "lines": 5
+      }
+    ],
+    "goal": "Publish a file with renameat(). Use epoll to wait for the inotify descriptor, then read the event that names the published file.",
+    "look": "Find “created: staged” and “epoll reported publication of current”. The edit removes only the creation line."
+  },
+  "diagnostics-capstone": {
+    "edit": "const rlim_t maximum =",
+    "steps": [
+      {
+        "heading": "Choose a per-process limit",
+        "text": "The example changes its own soft descriptor limit.",
+        "anchor": "const rlim_t maximum =",
+        "lines": 5
+      },
+      {
+        "heading": "Compare the final error",
+        "text": "The program checks errno after the first failed open. The trace independently shows the result.",
+        "anchor": "while ((fd = open(\"/dev/null\",",
+        "lines": 3
+      }
+    ],
+    "goal": "Run the descriptor-limit experiment under strace. Connect the program’s successful-open count to the kernel call that eventually fails.",
+    "look": "Match the program’s final error to the open call returning EMFILE under “Last open calls”."
+  },
   'thread-start': guide(
     'Start a worker thread and pass it a message. A thread runs its own instructions while sharing the process’s memory with main().',
     'Find “worker: ready” and “worker joined”. Which line comes first?',

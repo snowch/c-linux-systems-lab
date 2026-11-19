@@ -8,6 +8,10 @@ export const course = {
   "summary": "Start with the Linux C API, then investigate processes, files, memory, concurrency and event-driven supervision.",
   "instructions": "On your first visit, select Run in Linux with the starter source unchanged. The page starts Linux if needed, prepares the files and compiles new or changed source with GCC.",
   "files": {
+    "limits.c": "./examples/limits.c",
+    "events-capstone.c": "./examples/events-capstone.c",
+    "memory-capstone.c": "./examples/memory-capstone.c",
+    "file-apis-capstone.c": "./examples/file-apis-capstone.c",
     "thread-start.c": "./examples/thread-start.c",
     "pipe-read.c": "./examples/pipe-read.c",
     "systems.c": "./examples/systems.c",
@@ -107,6 +111,32 @@ export const course = {
       "command": "/tmp/linux-tools cloexec"
     },
     {
+      "id": "file-apis-capstone",
+      "section": "Linux API essentials",
+      "sectionCapstone": true,
+      "buildsOn": [
+        "api-bytes",
+        "api-metadata",
+        "descriptors"
+      ],
+      "title": "Follow one file through two descriptors",
+      "file": "file-apis-capstone.c",
+      "focus": "const off_t start = 0;",
+      "intro": "Write a temporary file, inspect its size and read one byte through a duplicate. Check the original descriptor’s offset afterwards.",
+      "question": "Does the read through the duplicate move the original descriptor’s offset?",
+      "task": "Change start from 0 to 1. Predict the byte and the new offset, then run again.",
+      "hint": "dup() gives a new descriptor for the same open file description. Its offset is shared.",
+      "explanation": "fstat() reports the file’s size. The read from the duplicate advances the offset visible through the original by one.",
+      "transfer": "How would an independent open affect this result if you kept a name for the file?",
+      "evidence": "Find metadata size 5, byte h and original offset 1. The edited run reads e and reports offset 2.",
+      "support": "systems-support.h",
+      "assets": [
+        "systems-support.h"
+      ],
+      "prepare": "if [ ! -x /tmp/lab-file-apis-capstone ] || ! cmp -s /tmp/lesson-input/file-apis-capstone.c /tmp/lab-file-apis-capstone.source || ! cmp -s /tmp/lesson-input/systems-support.h /tmp/lab-file-apis-capstone.header; then\n    echo 'Compiling file-apis-capstone.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror /tmp/lesson-input/file-apis-capstone.c -o /tmp/lab-file-apis-capstone.next -pthread\n    cp /tmp/lesson-input/file-apis-capstone.c /tmp/lab-file-apis-capstone.source.next\n    cp /tmp/lesson-input/systems-support.h /tmp/lab-file-apis-capstone.header.next\n    rm -f /tmp/lab-file-apis-capstone.source\n    mv /tmp/lab-file-apis-capstone.next /tmp/lab-file-apis-capstone\n    mv /tmp/lab-file-apis-capstone.header.next /tmp/lab-file-apis-capstone.header\n    mv /tmp/lab-file-apis-capstone.source.next /tmp/lab-file-apis-capstone.source\nfi",
+      "command": "/tmp/lab-file-apis-capstone"
+    },
+    {
       "id": "pipe-read",
       "section": "Processes and terminal control",
       "title": "Read from a pipe and observe EOF",
@@ -155,6 +185,8 @@ export const course = {
     },
     {
       "id": "jobs",
+      "sectionCapstone": true,
+      "buildsOn": ["pipe-read", "pipeline", "signals"],
       "section": "Processes and terminal control",
       "title": "Stop and resume a foreground job",
       "file": "linux-tools.c",
@@ -246,6 +278,32 @@ export const course = {
       "command": "/tmp/linux-tools atomics"
     },
     {
+      "id": "memory-capstone",
+      "section": "Memory and concurrency",
+      "sectionCapstone": true,
+      "buildsOn": [
+        "mapping",
+        "filemap",
+        "thread-start"
+      ],
+      "title": "Write a file mapping from a worker",
+      "file": "memory-capstone.c",
+      "focus": "const int mode = MAP_SHARED;",
+      "intro": "Give one worker access to a file-backed mapping. Join it before comparing the mapped byte and the backing file.",
+      "question": "Does the worker’s write appear when the main thread reads the backing file?",
+      "task": "Change MAP_SHARED to MAP_PRIVATE. Run again and compare the mapped byte with the backing byte.",
+      "hint": "Both threads can read the same mapped byte. The mapping mode controls what happens to its backing file.",
+      "explanation": "Joining ensures the worker has finished writing. MAP_SHARED updates the file view, while MAP_PRIVATE keeps a private copy of the modified page.",
+      "transfer": "If another process opened the file after the join, which byte would it read in each case?",
+      "evidence": "Look for “mapping=W backing file=W”, then change the mapping mode and compare.",
+      "support": "process-support.h",
+      "assets": [
+        "process-support.h"
+      ],
+      "prepare": "if [ ! -x /tmp/lab-memory-capstone ] || ! cmp -s /tmp/lesson-input/memory-capstone.c /tmp/lab-memory-capstone.source || ! cmp -s /tmp/lesson-input/process-support.h /tmp/lab-memory-capstone.header; then\n    echo 'Compiling memory-capstone.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror /tmp/lesson-input/memory-capstone.c -o /tmp/lab-memory-capstone.next -pthread\n    cp /tmp/lesson-input/memory-capstone.c /tmp/lab-memory-capstone.source.next\n    cp /tmp/lesson-input/process-support.h /tmp/lab-memory-capstone.header.next\n    rm -f /tmp/lab-memory-capstone.source\n    mv /tmp/lab-memory-capstone.next /tmp/lab-memory-capstone\n    mv /tmp/lab-memory-capstone.header.next /tmp/lab-memory-capstone.header\n    mv /tmp/lab-memory-capstone.source.next /tmp/lab-memory-capstone.source\nfi",
+      "command": "/tmp/lab-memory-capstone"
+    },
+    {
       "id": "mqueue",
       "section": "Files and event loops",
       "title": "Receive messages in priority order",
@@ -319,6 +377,32 @@ export const course = {
       "command": "/tmp/linux-tools fd-events"
     },
     {
+      "id": "events-capstone",
+      "section": "Files and event loops",
+      "sectionCapstone": true,
+      "buildsOn": [
+        "replace",
+        "inotify",
+        "fd-events"
+      ],
+      "title": "Observe publication through an event loop",
+      "file": "events-capstone.c",
+      "focus": "const uint32_t watched_events",
+      "intro": "Publish a file with renameat(). Use epoll to wait for the inotify descriptor, then read the event that names the published file.",
+      "question": "Which operation publishes the new name, and which event confirms it?",
+      "task": "Change watched_events to IN_MOVED_TO only. Run again and compare the creation line with the publication line.",
+      "hint": "epoll says the inotify descriptor is readable. The event record tells you which name changed.",
+      "explanation": "renameat() moves the staged file into its final name. The watch filter controls whether creation is also reported. The final move still reaches the event loop.",
+      "transfer": "How could the loop distinguish events for two directories if it watched both using the same inotify descriptor?",
+      "evidence": "Find “created: staged” and “epoll reported publication of current”. The edit removes only the creation line.",
+      "support": "process-support.h",
+      "assets": [
+        "process-support.h"
+      ],
+      "prepare": "if [ ! -x /tmp/lab-events-capstone ] || ! cmp -s /tmp/lesson-input/events-capstone.c /tmp/lab-events-capstone.source || ! cmp -s /tmp/lesson-input/process-support.h /tmp/lab-events-capstone.header; then\n    echo 'Compiling events-capstone.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror /tmp/lesson-input/events-capstone.c -o /tmp/lab-events-capstone.next -pthread\n    cp /tmp/lesson-input/events-capstone.c /tmp/lab-events-capstone.source.next\n    cp /tmp/lesson-input/process-support.h /tmp/lab-events-capstone.header.next\n    rm -f /tmp/lab-events-capstone.source\n    mv /tmp/lab-events-capstone.next /tmp/lab-events-capstone\n    mv /tmp/lab-events-capstone.header.next /tmp/lab-events-capstone.header\n    mv /tmp/lab-events-capstone.source.next /tmp/lab-events-capstone.source\nfi",
+      "command": "/tmp/lab-events-capstone"
+    },
+    {
       "id": "limits",
       "section": "Diagnostics and resource limits",
       "title": "Diagnose descriptor exhaustion",
@@ -350,6 +434,32 @@ export const course = {
       ],
       "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source.next\n    rm -f /tmp/linux-tools.source\n    mv /tmp/linux-tools.next /tmp/linux-tools\n    mv /tmp/linux-tools.source.next /tmp/linux-tools.source\nfi",
       "command": "cp /tmp/lesson-input/strace-x86 /tmp/lab-strace\nchmod 700 /tmp/lab-strace\nprintf 'Program output\\n'\n/tmp/lab-strace -e trace=write -o /tmp/linux-lab-write.trace /tmp/linux-tools trace\nprintf '\\nTrace of write calls\\n'\ncat /tmp/linux-lab-write.trace"
+    },
+    {
+      "id": "diagnostics-capstone",
+      "section": "Diagnostics and resource limits",
+      "sectionCapstone": true,
+      "buildsOn": [
+        "limits",
+        "trace"
+      ],
+      "title": "Trace a process that runs out of descriptors",
+      "file": "limits.c",
+      "focus": "const rlim_t maximum =",
+      "intro": "Run the descriptor-limit experiment under strace. Connect the program’s successful-open count to the kernel call that eventually fails.",
+      "question": "Does the failing open report a missing path, a permission error or a descriptor limit?",
+      "task": "Lower the limit from 32 to 16, rerun, and compare the successful-open count and final failed call.",
+      "hint": "Check the error name on the last open. The process already has descriptors in use before the loop.",
+      "explanation": "The final open returns EMFILE at either limit. The process reaches exhaustion after fewer successful opens with the lower limit.",
+      "transfer": "How would the trace change if the loop closed each descriptor immediately after opening it?",
+      "evidence": "Match the program’s final error to the open call returning EMFILE under “Last open calls”.",
+      "support": "process-support.h",
+      "assets": [
+        "process-support.h",
+        "strace-x86"
+      ],
+      "prepare": "if [ ! -x /tmp/lab-limits ] || ! cmp -s /tmp/lesson-input/limits.c /tmp/lab-limits.source || ! cmp -s /tmp/lesson-input/process-support.h /tmp/lab-limits.header; then\n    echo 'Compiling limits.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror /tmp/lesson-input/limits.c -o /tmp/lab-limits.next -pthread\n    cp /tmp/lesson-input/limits.c /tmp/lab-limits.source.next\n    cp /tmp/lesson-input/process-support.h /tmp/lab-limits.header.next\n    rm -f /tmp/lab-limits.source\n    mv /tmp/lab-limits.next /tmp/lab-limits\n    mv /tmp/lab-limits.header.next /tmp/lab-limits.header\n    mv /tmp/lab-limits.source.next /tmp/lab-limits.source\nfi",
+      "command": "cp /tmp/lesson-input/strace-x86 /tmp/lab-strace\nchmod 700 /tmp/lab-strace\n/tmp/lab-strace -e trace=open,openat -o /tmp/linux-lab-open.trace /tmp/lab-limits\nprintf '\\nLast open calls\\n'\ntail -4 /tmp/linux-lab-open.trace"
     },
     {
       "id": "supervise",

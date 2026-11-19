@@ -12,6 +12,8 @@ Capstone sections link back to the smaller exercises and open the complete runna
 
 ## Lessons
 
+Each teaching section ends with a capstone that combines its skills. Each lesson opens with a concept diagram.
+
 ### Linux API essentials
 
 - [Open and close a file](https://snowch.github.io/c-linux-systems-lab/#open-file)
@@ -20,19 +22,23 @@ Capstone sections link back to the smaller exercises and open the complete runna
 - [Inspect a file through its descriptor](https://snowch.github.io/c-linux-systems-lab/#api-metadata)
 - [Trace a shared file offset](https://snowch.github.io/c-linux-systems-lab/#descriptors)
 - [Control which descriptors survive exec](https://snowch.github.io/c-linux-systems-lab/#cloexec)
+- [Follow one file through two descriptors](https://snowch.github.io/c-linux-systems-lab/#file-apis-capstone) · Section capstone
+- [Read from a pipe and observe EOF](https://snowch.github.io/c-linux-systems-lab/#pipe-read)
 
 ### Processes and terminal control
 
 - [Connect two processes with a pipe](https://snowch.github.io/c-linux-systems-lab/#pipeline)
 - [Synchronise a parent with a signal](https://snowch.github.io/c-linux-systems-lab/#signals)
-- [Stop and resume a foreground job](https://snowch.github.io/c-linux-systems-lab/#jobs)
+- [Stop and resume a foreground job](https://snowch.github.io/c-linux-systems-lab/#jobs) · Section capstone
 
 ### Memory and concurrency
 
 - [Compare shared and private memory](https://snowch.github.io/c-linux-systems-lab/#mapping)
 - [Map bytes backed by an open file](https://snowch.github.io/c-linux-systems-lab/#filemap)
+- [Start and join one thread](https://snowch.github.io/c-linux-systems-lab/#thread-start)
 - [Coordinate a producer and a consumer](https://snowch.github.io/c-linux-systems-lab/#threads)
 - [Share a counter and publish a result](https://snowch.github.io/c-linux-systems-lab/#atomics)
+- [Write a file mapping from a worker](https://snowch.github.io/c-linux-systems-lab/#memory-capstone) · Section capstone
 
 ### Files and event loops
 
@@ -41,11 +47,13 @@ Capstone sections link back to the smaller exercises and open the complete runna
 - [Observe a directory while publishing a file](https://snowch.github.io/c-linux-systems-lab/#inotify)
 - [Observe eventfd readiness](https://snowch.github.io/c-linux-systems-lab/#events)
 - [Handle timers and signals in one event loop](https://snowch.github.io/c-linux-systems-lab/#fd-events)
+- [Observe publication through an event loop](https://snowch.github.io/c-linux-systems-lab/#events-capstone) · Section capstone
 
 ### Diagnostics and resource limits
 
 - [Diagnose descriptor exhaustion](https://snowch.github.io/c-linux-systems-lab/#limits)
 - [Trace an API call at the kernel boundary](https://snowch.github.io/c-linux-systems-lab/#trace)
+- [Trace a process that runs out of descriptors](https://snowch.github.io/c-linux-systems-lab/#diagnostics-capstone) · Section capstone
 
 ### Capstones
 
