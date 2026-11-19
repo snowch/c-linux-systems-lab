@@ -126,7 +126,7 @@ export const course = {
     },
     {
       "id": "pipeline",
-      "buildsOn": "pipe-read",
+      "buildsOn": ["pipe-read"],
       "section": "Processes and terminal control",
       "title": "Connect two processes with a pipe",
       "intro": "fork() creates a child that inherits open descriptors. dup2() redirects standard input or output before exec replaces the child’s program.",
@@ -217,7 +217,7 @@ export const course = {
     },
     {
       "id": "threads",
-      "buildsOn": "thread-start",
+      "buildsOn": ["thread-start"],
       "section": "Memory and concurrency",
       "title": "Coordinate a producer and a consumer",
       "intro": "Threads share memory. A mutex protects the queue state, and a condition variable allows a thread to sleep until the predicate it cares about might have changed.",
@@ -353,6 +353,7 @@ export const course = {
     },
     {
       "id": "supervise",
+      "buildsOn": ["pipe-read", "pipeline", "signals"],
       "section": "Capstones",
       "title": "Supervise a worker with a deadline",
       "intro": "A supervisor uses a pipe to collect a result, poll() to enforce a response deadline, and waitpid() to collect the worker’s exit status.",
@@ -367,6 +368,7 @@ export const course = {
     },
     {
       "id": "pidfd",
+      "buildsOn": ["fd-events", "supervise"],
       "section": "Capstones",
       "title": "Escalate a worker shutdown with a process descriptor",
       "file": "linux-tools.c",

@@ -60,7 +60,10 @@
       <h1 id="lesson-title" tabindex="-1">{{title}}</h1>
       <p class="lede" id="intro"></p>
       <p id="question" class="question"></p>
-      <p id="builds-on" hidden>For a shorter introduction, try <a id="builds-on-link"></a>.</p>
+      <div id="builds-on" hidden>
+        <p>Try the smaller exercises before running the complete example.</p>
+        <ul id="builds-on-list"></ul>
+      </div>
       <section aria-labelledby="walkthrough-heading">
         <h2 id="walkthrough-heading">Walk through the code</h2>
         <p>These read-only excerpts show the starter program. Edit the complete program after the first run.</p>
@@ -71,13 +74,17 @@
         <p id="instructions"></p>
         <div class="workspace">
           <details id="program" class="program-tools">
-            <summary>Edit the lesson program</summary>
+            <summary id="program-summary">Edit the lesson program</summary>
             <div class="toolbar">
               <label id="file-choice" for="file" hidden>Choose source <select id="file"></select></label>
               <label for="source">Editable source <code id="source-name"></code></label>
               <button type="button" id="restore" hidden>Restore starter</button>
             </div>
             <textarea id="source" spellcheck="false" autocapitalize="off" autocomplete="off" rows="14"></textarea>
+            <details id="capstone-setup" class="program-tools" hidden>
+              <summary>Read the setup code</summary>
+              <pre tabindex="0" aria-label="Setup source"><code id="setup-source"></code></pre>
+            </details>
             <p id="documented-example" class="toolbar notice" hidden>This is a draft of an earlier version. Run in Linux executes this draft. Select Show me where to edit to return to the program used in the instructions.</p>
           </details>
           <p id="draft-status" class="toolbar notice" role="status" hidden></p>

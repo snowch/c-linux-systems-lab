@@ -44,7 +44,7 @@ $('theme').onclick = () => {
 
 async function loadStarter(name) {
   if (defaults.has(name)) return;
-  const response = await fetch(course.files[name]);
+  const response = await fetch(course.files[name] ?? './examples/' + name);
   if (!response.ok) throw Error('Starter request failed for ' + name);
   defaults.set(name, await response.text());
 }
@@ -84,12 +84,17 @@ function showSource(name = activeFile) {
   $('documented-example').hidden = !earlier;
   $('read-result').hidden = earlier;
   const support = $('support-code');
-  support.hidden = earlier || !lesson.support;
+  const capstone = Boolean(lesson.buildsOn?.length);
+  const showSetup = name === lesson.file && Boolean(lesson.support);
+  support.hidden = !showSetup || capstone;
   if (!support.hidden) support.querySelector('a').href = './examples/' + lesson.support;
+  const setup = $('capstone-setup');
+  setup.hidden = !showSetup || !capstone || !defaults.has(lesson.support);
+  if (!setup.hidden) $('setup-source').textContent = defaults.get(lesson.support);
   source.value = valueOf() ?? '';
   source.scrollTop = 0;
   source.scrollLeft = 0;
-  if ($('program').open) positionSource(lesson.focus);
+  if ($('program').open && !capstone) positionSource(lesson.focus);
 }
 function switchSource(name) {
   showSource(name);
@@ -106,7 +111,7 @@ $('edit-step').onclick = () => {
   positionSource(source.value.includes(edit) ? edit : lesson.focus);
 };
 $('program').addEventListener('toggle', () => {
-  if (lesson && $('program').open && document.activeElement !== source) positionSource(lesson.focus);
+  if (lesson && $('program').open && !lesson.buildsOn?.length && document.activeElement !== source) positionSource(lesson.focus);
 });
 source.oninput = () => {
   const draft = draftKey();
@@ -179,7 +184,12 @@ async function showLesson(index) {
   sourceError = '';
   const thisSelection = ++selection;
   const tutorial = tutorials[lesson.id];
-  $('program').open = false;
+  const prerequisites = lesson.buildsOn ?? [];
+  const capstone = prerequisites.length > 0;
+  $('program').open = capstone;
+  $('program-summary').textContent = capstone ? 'Complete example' : 'Edit the lesson program';
+  $('capstone-setup').open = false;
+  $('capstone-setup').hidden = true;
   $('intro').textContent = tutorial.goal;
   $('read-result').textContent = tutorial.look;
   $('read-result').hidden = false;
@@ -203,13 +213,16 @@ async function showLesson(index) {
     instructions:'instructions', task:'task', hint:'hint', explanation:'explanation',
     transfer:'transfer'
   })) $(id).textContent = lesson[field] ?? course[field] ?? '';
-  const starter = course.lessons.find(item => item.id === lesson.buildsOn);
-  $('builds-on').hidden = !starter;
-  if (starter) {
-    const link = $('builds-on-link');
-    link.href = '#' + starter.id;
-    link.textContent = starter.title;
-  }
+  $('workbench-heading').textContent = capstone ? 'Capstone' : 'Run it in Linux';
+  $('builds-on').hidden = !capstone;
+  $('builds-on-list').replaceChildren(...prerequisites.map(id => {
+    const item = document.createElement('li');
+    const link = document.createElement('a');
+    link.href = '#' + id;
+    link.textContent = course.lessons.find(earlier => earlier.id === id).title;
+    item.append(link);
+    return item;
+  }));
   showReferences(lesson.id);
   picker.value = lesson.id;
   $('next-lesson').replaceChildren();
@@ -217,7 +230,8 @@ async function showLesson(index) {
     if (!other) continue;
     const link = document.createElement('a');
     link.href = '#' + other.id;
-    link.textContent = label + ' · ' + other.title;
+    const followsThisLesson = label === 'Next' && other.buildsOn?.includes(lesson.id);
+    link.textContent = (followsThisLesson ? 'Continue to the capstone' : label) + ' · ' + other.title;
     $('next-lesson').append(link);
   }
   source.disabled = true;
@@ -234,7 +248,9 @@ async function showLesson(index) {
   const previousKey = previous && draftKey(previous);
   const previousDraft = previousKey ? edits.get(previousKey) ?? read(previousKey) : null;
   const required = previousDraft == null ? [lesson.file] : [lesson.file, previous];
-  const [starterResult] = await Promise.allSettled(required.map(loadStarter));
+  const sources = required.map(loadStarter);
+  if (capstone && lesson.support) sources.push(loadStarter(lesson.support));
+  const [starterResult] = await Promise.allSettled(sources);
   if (selection !== thisSelection) return;
   if (starterResult.status === 'rejected') {
     sourceError = 'Could not load ' + lesson.file + '. Reload this page to try again.';
