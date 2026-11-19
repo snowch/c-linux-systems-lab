@@ -1,6 +1,10 @@
 export const course = {
   "slug": "c-linux-systems-lab",
   "title": "C Linux Systems Lab",
+  "overview": {
+    "description": "Learn how C programs use Linux. Start with return values, errno and file descriptors, then work through process control, memory, threads, event loops and worker supervision.",
+    "prerequisites": "Know basic C. You can run every exercise and inspect its output in the browser."
+  },
   "summary": "Start with the Linux C API, then investigate processes, files, memory, concurrency and event-driven supervision.",
   "instructions": "Run in Linux sends the editor contents to the guest. GCC compiles new or edited source before running the exercise. Use the console output to check your prediction.",
   "files": {
