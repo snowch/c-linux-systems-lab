@@ -25,10 +25,6 @@ export const course = {
       "hint": "Both names identify readable devices in this Linux guest.",
       "explanation": "Both calls give the program a descriptor. The path selects what to open. The descriptor is the handle the program uses afterward.",
       "transfer": "Why does the program have to check the result before passing it to close()?",
-      "reference": [
-        "Read open(2)",
-        "https://man7.org/linux/man-pages/man2/open.2.html"
-      ],
       "file": "open-file.c",
       "focus": "int fd = open(path, O_RDONLY);",
       "command": "/tmp/open-file",
@@ -46,10 +42,6 @@ export const course = {
       "hint": "/dev/null can be opened for either mode. Look at the access mode stored on the open descriptor.",
       "explanation": "With O_WRONLY, read() returns -1 and sets errno to EBADF. With O_RDONLY, reading /dev/null succeeds and returns zero bytes. Inspect errno only after the call reports an error.",
       "transfer": "Change path to /tmp/this-file-does-not-exist. Which call fails, and how does its errno differ?",
-      "reference": [
-        "Read errno(3)",
-        "https://man7.org/linux/man-pages/man3/errno.3.html"
-      ],
       "prepare": "if [ ! -x /tmp/linux-api ] || ! cmp -s /tmp/lesson-input/io-basics.c /tmp/linux-api.source; then\n    echo 'Compiling io-basics.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror  /tmp/lesson-input/io-basics.c -o /tmp/linux-api.next \n    mv /tmp/linux-api.next /tmp/linux-api\n    cp /tmp/lesson-input/io-basics.c /tmp/linux-api.source\nfi",
       "command": "/tmp/linux-api errors"
     },
@@ -65,10 +57,6 @@ export const course = {
       "hint": "The loop prints the count from read() itself. A result of zero marks EOF in this example.",
       "explanation": "The buffer size is a maximum. A short read is still a successful transfer. Rewinding makes the first read start at the beginning of the file.",
       "transfer": "What happens if you remove lseek() and try reading immediately after writing?",
-      "reference": [
-        "Read read(2)",
-        "https://man7.org/linux/man-pages/man2/read.2.html"
-      ],
       "prepare": "if [ ! -x /tmp/linux-api ] || ! cmp -s /tmp/lesson-input/io-basics.c /tmp/linux-api.source; then\n    echo 'Compiling io-basics.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror  /tmp/lesson-input/io-basics.c -o /tmp/linux-api.next \n    mv /tmp/linux-api.next /tmp/linux-api\n    cp /tmp/lesson-input/io-basics.c /tmp/linux-api.source\nfi",
       "command": "/tmp/linux-api bytes"
     },
@@ -84,10 +72,6 @@ export const course = {
       "hint": "The data and metadata belong to the open file object. A directory entry gives that object a name.",
       "explanation": "The mode reflects fchmod(). Removing the name drops the link count to zero. The open descriptor still reaches the same file and fstat() still reports its size.",
       "transfer": "What changes if another process already holds an open descriptor when the name is removed?",
-      "reference": [
-        "Read stat(2)",
-        "https://man7.org/linux/man-pages/man2/stat.2.html"
-      ],
       "prepare": "if [ ! -x /tmp/linux-api ] || ! cmp -s /tmp/lesson-input/io-basics.c /tmp/linux-api.source; then\n    echo 'Compiling io-basics.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror  /tmp/lesson-input/io-basics.c -o /tmp/linux-api.next \n    mv /tmp/linux-api.next /tmp/linux-api\n    cp /tmp/lesson-input/io-basics.c /tmp/linux-api.source\nfi",
       "command": "/tmp/linux-api metadata"
     },
@@ -102,10 +86,6 @@ export const course = {
       "hint": "Opening the same path twice normally makes independent file positions.",
       "explanation": "dup() makes a second handle to the same description. A second open creates a new description starting at offset zero. Unlinking the path leaves the open descriptions usable.",
       "transfer": "What offset would the parent see if a child used an inherited descriptor to read one byte before exiting?",
-      "reference": [
-        "Read open(2)",
-        "https://man7.org/linux/man-pages/man2/open.2.html"
-      ],
       "command": "/tmp/sys descriptors",
       "file": "systems.c"
     },
@@ -121,10 +101,6 @@ export const course = {
       "hint": "The experiment changes the descriptor flag with F_SETFD. The second program checks the same slot with F_GETFD.",
       "explanation": "FD_CLOEXEC closes the descriptor on a successful exec. Clearing it leaves the descriptor available to the new program.",
       "transfer": "Why is O_CLOEXEC usually safer than setting the flag with a separate call in a multithreaded program?",
-      "reference": [
-        "Read execve(2)",
-        "https://man7.org/linux/man-pages/man2/execve.2.html"
-      ],
       "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools cloexec"
     },
@@ -139,10 +115,6 @@ export const course = {
       "hint": "Count every process that holds a write end. The pipe signals EOF when all write ends have closed.",
       "explanation": "printf exits and closes its write end. With the parent’s write end open, tr still expects more bytes and the parent waits for tr. The deadline bounds the demonstration.",
       "transfer": "Where should you set close-on-exec when running commands that inherit other, unrelated descriptors?",
-      "reference": [
-        "Read pipe(7)",
-        "https://man7.org/linux/man-pages/man7/pipe.7.html"
-      ],
       "command": "/tmp/sys pipeline",
       "file": "systems.c"
     },
@@ -157,10 +129,6 @@ export const course = {
       "hint": "The blocked signal stays pending. sigwaitinfo() can consume an already-pending signal.",
       "explanation": "Blocking before fork removes the race between child delivery and the parent starting its wait. The parent restores its previous signal mask after collecting the child.",
       "transfer": "What would you use if multiple events must be counted individually?",
-      "reference": [
-        "Read sigwaitinfo(2)",
-        "https://man7.org/linux/man-pages/man2/sigwaitinfo.2.html"
-      ],
       "command": "/tmp/sys signals",
       "file": "systems.c"
     },
@@ -176,10 +144,6 @@ export const course = {
       "hint": "tcsetpgrp() puts the job’s group in the foreground. The code configures the same byte as VSUSP and then writes it to the terminal.",
       "explanation": "The terminal delivers SIGTSTP to the foreground group. The supervisor observes the stop, reclaims the terminal, resumes the job and reaps it.",
       "transfer": "How could a shell put a suspended job back in the foreground before sending SIGCONT?",
-      "reference": [
-        "Read tcsetpgrp(3)",
-        "https://man7.org/linux/man-pages/man3/tcsetpgrp.3.html"
-      ],
       "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "mkdir -p /dev/pts\nif ! mountpoint -q /dev/pts; then mount -t devpts devpts /dev/pts; fi\n/tmp/linux-tools jobs"
     },
@@ -194,10 +158,6 @@ export const course = {
       "hint": "Both mappings are created before fork. The parent only prints after the child exits.",
       "explanation": "The shared mapping changes for both processes. A private write is isolated in the child, leaving the parent’s original value intact.",
       "transfer": "If both processes needed to update the shared value at the same time, what would the program need beyond MAP_SHARED?",
-      "reference": [
-        "Read mmap(2)",
-        "https://man7.org/linux/man-pages/man2/mmap.2.html"
-      ],
       "command": "/tmp/sys mapping",
       "file": "systems.c"
     },
@@ -213,10 +173,6 @@ export const course = {
       "hint": "The mapped byte is printed separately from the byte read through the original descriptor.",
       "explanation": "With MAP_SHARED, the two reads agree. With MAP_PRIVATE, the mapping contains the new byte while the underlying file still holds zero. This guest uses RAM-backed storage.",
       "transfer": "Why would a durability test need a persistent storage device as well as the right sync calls?",
-      "reference": [
-        "Read mmap(2)",
-        "https://man7.org/linux/man-pages/man2/mmap.2.html"
-      ],
       "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools filemap"
     },
@@ -231,10 +187,6 @@ export const course = {
       "hint": "The producer waits while full is true. The consumer waits while full is false. Both test the predicate under the same mutex.",
       "explanation": "A condition wait releases the mutex while sleeping and reacquires it before returning. The while loop verifies the predicate again before either thread acts.",
       "transfer": "How would you add a shutdown message without leaving a waiting thread asleep?",
-      "reference": [
-        "Read pthread_cond_wait(3p)",
-        "https://man7.org/linux/man-pages/man3p/pthread_cond_wait.3p.html"
-      ],
       "command": "/tmp/sys threads",
       "file": "systems.c"
     },
@@ -250,10 +202,6 @@ export const course = {
       "hint": "The counter needs atomic updates. The ready flag orders earlier writes to the separate checksum.",
       "explanation": "Both threads contribute their increments. The consumer reads the checksum after an acquire load observes the release store, which makes the earlier checksum write visible.",
       "transfer": "When would a mutex be easier than atomics for a data structure with several fields?",
-      "reference": [
-        "Read the C memory-order reference",
-        "https://en.cppreference.com/w/c/atomic/memory_order"
-      ],
       "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools atomics"
     },
@@ -269,10 +217,6 @@ export const course = {
       "hint": "The second message has priority 5. Compare the two numbers before looking at the send order.",
       "explanation": "The receive operation selects the highest priority first. For equal priority, the older message is received first.",
       "transfer": "How could a stream-based IPC design preserve message boundaries and priority without a message queue?",
-      "reference": [
-        "Read mq_overview(7)",
-        "https://man7.org/linux/man-pages/man7/mq_overview.7.html"
-      ],
       "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools mqueue"
     },
@@ -287,10 +231,6 @@ export const course = {
       "hint": "Observe which descriptor was opened before renameat(). The two fsync() calls are for the staged data and directory entry.",
       "explanation": "The old descriptor still refers to its original inode. After replacement, the name resolves to the staged file. The RAM-backed guest demonstrates namespace behaviour without testing crash durability.",
       "transfer": "Why should the staged file be created in the same filesystem as the destination?",
-      "reference": [
-        "Read rename(2)",
-        "https://man7.org/linux/man-pages/man2/rename.2.html"
-      ],
       "command": "/tmp/sys replace",
       "file": "systems.c"
     },
@@ -306,10 +246,6 @@ export const course = {
       "hint": "The mask controls which of the operations generate records for this watch.",
       "explanation": "Creating the staged file generates IN_CREATE. Renaming it into the ready name generates IN_MOVED_TO. Filtering to the latter keeps the publication event.",
       "transfer": "What should a watcher do if inotify reports that its event queue overflowed?",
-      "reference": [
-        "Read inotify(7)",
-        "https://man7.org/linux/man-pages/man7/inotify.7.html"
-      ],
       "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools inotify"
     },
@@ -324,10 +260,6 @@ export const course = {
       "hint": "With the default mode, a successful read returns the accumulated count and resets it to zero.",
       "explanation": "Each 64-bit write adds its value. The descriptor is readable while the counter is positive, then stops being readable after a default read drains it.",
       "transfer": "How would the interpretation change if the descriptor were created with EFD_SEMAPHORE?",
-      "reference": [
-        "Read eventfd(2)",
-        "https://man7.org/linux/man-pages/man2/eventfd.2.html"
-      ],
       "command": "/tmp/sys events",
       "file": "systems.c"
     },
@@ -343,10 +275,6 @@ export const course = {
       "hint": "epoll reports a ready descriptor. The loop uses it to choose the correct record type.",
       "explanation": "The signal descriptor returns SIGUSR1 and the timer descriptor returns an expiration count. Both are read through epoll, and either can become ready first.",
       "transfer": "How would you handle a periodic timer if a read reports more than one expiration?",
-      "reference": [
-        "Read timerfd_create(2)",
-        "https://man7.org/linux/man-pages/man2/timerfd_create.2.html"
-      ],
       "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools fd-events"
     },
@@ -362,10 +290,6 @@ export const course = {
       "hint": "Standard input, output and error already occupy descriptor slots. Other inherited handles can also occupy slots.",
       "explanation": "The open loop eventually receives EMFILE when it cannot allocate another descriptor in the process. Lowering the soft limit makes that happen sooner.",
       "transfer": "What would you inspect in /proc to distinguish leaked descriptors from an expected workload peak?",
-      "reference": [
-        "Read getrlimit(2)",
-        "https://man7.org/linux/man-pages/man2/getrlimit.2.html"
-      ],
       "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools limits"
     },
@@ -381,10 +305,6 @@ export const course = {
       "hint": "The -e trace=write option limits the trace to write calls. Find the call that used the descriptor you edited.",
       "explanation": "The failing call shows EBADF on descriptor -1. After the edit the same buffer is written to descriptor 1 and the trace reports the successful byte count.",
       "transfer": "How would you change the tracing command to diagnose a process that cannot open a file?",
-      "reference": [
-        "Read strace(1)",
-        "https://man7.org/linux/man-pages/man1/strace.1.html"
-      ],
       "assets": [
         "strace-x86"
       ],
@@ -402,10 +322,6 @@ export const course = {
       "hint": "The read end and the process have separate lifecycles. The parent checks the pipe first, then always collects the child.",
       "explanation": "The original runs verify both paths. On a timeout, the supervisor signals the child and reaps it. A child that replies before the deadline takes the ordinary success path.",
       "transfer": "Extend the supervisor so a child that closes the pipe without sending done is reported separately from a timeout.",
-      "reference": [
-        "Read waitpid(2)",
-        "https://man7.org/linux/man-pages/man2/waitpid.2.html"
-      ],
       "command": "/tmp/sys supervise",
       "file": "systems.c"
     },
@@ -421,10 +337,6 @@ export const course = {
       "hint": "The first deadline sends SIGTERM and arms a grace period. The second sends SIGKILL only if the worker has not exited.",
       "explanation": "With SIGTERM ignored, the worker needs escalation. With the default disposition, it exits after SIGTERM, and the pidfd wakes the supervisor before the next deadline.",
       "transfer": "How would you extend the supervisor to stop accepting jobs and let an active job finish before sending SIGTERM?",
-      "reference": [
-        "Read pidfd_open(2)",
-        "https://man7.org/linux/man-pages/man2/pidfd_open.2.html"
-      ],
       "prepare": "if [ ! -x /tmp/linux-tools ] || ! cmp -s /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source; then\n    echo 'Compiling linux-tools.c in Linux'\n    gcc -std=c11 -Wall -Wextra -Werror -pthread /tmp/lesson-input/linux-tools.c -o /tmp/linux-tools.next \n    mv /tmp/linux-tools.next /tmp/linux-tools\n    cp /tmp/lesson-input/linux-tools.c /tmp/linux-tools.source\nfi",
       "command": "/tmp/linux-tools pidfd"
     }
