@@ -6,7 +6,7 @@ Copyright © 2026 Christopher Snow.
 
 Each lesson introduces the relevant calls in short excerpts, then runs the example and asks you to make one change in its standalone C program. Use **Show me where to edit** to open the program at the change. If you saved work against an earlier shared file, open **Edit the lesson program** and use **Choose source** to open that draft. **Run in Linux** sends the selected source to an Alpine Linux guest running in WebAssembly. The guest compiles new or changed source with GCC. The draft status reports whether the browser saved an edit. Use **Download source** if saving fails. Open **Linux shell and reset** for the shell or a fresh guest. Resetting Linux keeps editor changes.
 
-Choose **Download for offline use** before disconnecting. Save roughly 145 MB of free browser storage for this course. Open the same URL in the same browser profile after the page reports **Available offline**. The lesson files, editor, compiler, kernel and runtime are included. External documentation requires an internet connection. HTTPS or localhost and a browser with WebAssembly and service workers are required.
+Choose **App status → Save offline copy** before disconnecting. Save roughly 145 MB of free browser storage for this course. Open the same URL in the same browser profile after the page reports **Downloaded and ready to use offline**. The lesson files, editor, compiler, kernel and runtime are included. External documentation requires an internet connection. HTTPS or localhost and a browser with WebAssembly and service workers are required.
 
 Capstone sections link back to the smaller exercises and open the complete runnable example.
 
